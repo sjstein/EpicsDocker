@@ -1,6 +1,6 @@
 FROM epicswasyn
 
-# NOTE: The envioronment variables HOME and EPICS_HOST_ARCH have been hard-coded
+# NOTE: The environment variables HOME and EPICS_HOST_ARCH have been hard-coded
 
 ENV HOME=/root
 ENV EPICS_BASE=$HOME/EPICS/epics-base
