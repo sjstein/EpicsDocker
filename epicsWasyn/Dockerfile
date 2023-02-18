@@ -7,16 +7,17 @@ ENV EPICS_BASE=$HOME/EPICS/epics-base
 ENV EPICS_HOST_ARCH=linux-x86_64
 ENV PATH=$EPICS_BASE/bin/$EPICS_HOST_ARCH:$PATH
 
-
 RUN set -eux; \
 	cd $HOME/EPICS; \
 	mkdir support; \
 	cd support; \
 	git clone https://github.com/epics-modules/asyn.git; \
-	rm $HOME/EPICS/support/asyn/configure/RELEASE \
+	rm $HOME/EPICS/support/asyn/configure/RELEASE; \
+	rm $HOME/EPICS/support/asyn/configure/CONFIG_SITE \
 	;
 
 COPY release.include $HOME/EPICS/support/asyn/configure/RELEASE
+COPY CONFIG_SITE.include $HOME/EPICS/support/asyn/configure/CONFIG_SITE
 
 RUN set -eux; \
 	cd $HOME/EPICS/support/asyn;\
