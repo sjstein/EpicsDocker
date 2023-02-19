@@ -278,6 +278,16 @@ then
 		fi
 	fi
 	
+	#Ubuntu change library names
+	if [[ -f /etc/os-release ]]
+	then
+		if grep -q -i "ubuntu" /etc/os-release
+		then
+			echo "TIRPC = YES" >> ./configure/CONFIG_SITE.Common.linux-x86_64
+			cp ./configure/CONFIG_SITE.Common.linux-x86_64 ./configure/CONFIG_SITE.Common.linux-x86_64-debug
+		fi
+	fi
+
 	cd ..
 fi
 
