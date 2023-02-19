@@ -7,22 +7,25 @@ ENV EPICS_BASE=$HOME/EPICS/epics-base
 ENV EPICS_HOST_ARCH=linux-x86_64
 ENV PATH=$EPICS_BASE/bin/$EPICS_HOST_ARCH:$PATH
 
+# Clone asyn repo
 RUN set -eux; \
-	cd $HOME/EPICS; \
+	cd $HOME/EPICS/; \
 	mkdir support; \
 	cd support; \
-	git clone https://github.com/epics-modules/asyn.git; \
-	cd asyn/configure; \
+	git clone https://github.com/epics-modules/asyn.git \
+;
+
+# Copy sed replacement templates
+COPY config_site.sed $HOME/EPICS/support/asyn/configure
+COPY release.sed $HOME/EPICS/support/asyn/configure
+
+# Modify make files for site specific parms
+RUN set -eux; \
+	cd $HOME/EPICS/support/asyn/configure; \
 	# Point to ubuntu location of RPC libs with following sed replacement
-	sed -i 's|# TIRPC|TIRPC|g' CONFIG_SITE; \
+	sed -i -f config_site.sed CONFIG_SITE; \
 	# Tailor EPICS directories to this specific installation
-	#  with the following 3 sed replacements.
-	sed -i 's|# Define the following Required or Optional\
-|HOME = /root|g' RELEASE; \
-	sed -i 's|# either in this file, or in a RELEASE.local\
-|SUPPORT=$(HOME)/EPICS/support|g' RELEASE; \
-	sed -i 's|#EPICS_BASE=/corvette/usr/local/epics-devel/base-7.0.7\
-|EPICS_BASE=$(HOME)/EPICS/epics-base|g' RELEASE \
+	sed -i -f release.sed RELEASE \
 ;
 
 # Build
