@@ -18,6 +18,10 @@ COPY RELEASE $HOME/EPICS/motor-sim-vbm/configure
 COPY st.cmd $HOME/EPICS/motor-sim-vbm/iocBoot/iocmotor_vbm
 
 RUN set -eux; \
+	chmod +x $HOME/EPICS/motor-sim-vbm/iocBoot/iocmotor_vbm/st.cmd \
+	;
+
+RUN set -eux; \
 	cd $HOME/EPICS/motor-sim-vbm;\
 	make clean; \
 	make \
