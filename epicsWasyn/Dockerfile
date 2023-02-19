@@ -12,13 +12,20 @@ RUN set -eux; \
 	mkdir support; \
 	cd support; \
 	git clone https://github.com/epics-modules/asyn.git; \
-	rm $HOME/EPICS/support/asyn/configure/RELEASE; \
-	rm $HOME/EPICS/support/asyn/configure/CONFIG_SITE \
-	;
+	cd asyn/configure; \
+	# Point to ubuntu location of RPC libs with following sed replacement
+	sed -i 's|# TIRPC|TIRPC|g' CONFIG_SITE; \
+	# Tailor EPICS directories to this specific installation
+	#  with the following 3 sed replacements.
+	sed -i 's|# Define the following Required or Optional\
+|HOME = /root|g' RELEASE; \
+	sed -i 's|# either in this file, or in a RELEASE.local\
+|SUPPORT=$(HOME)/EPICS/support|g' RELEASE; \
+	sed -i 's|#EPICS_BASE=/corvette/usr/local/epics-devel/base-7.0.7\
+|EPICS_BASE=$(HOME)/EPICS/epics-base|g' RELEASE \
+;
 
-COPY release.include $HOME/EPICS/support/asyn/configure/RELEASE
-COPY CONFIG_SITE.include $HOME/EPICS/support/asyn/configure/CONFIG_SITE
-
+# Build
 RUN set -eux; \
 	cd $HOME/EPICS/support/asyn;\
 	make \
